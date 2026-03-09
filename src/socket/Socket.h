@@ -11,13 +11,20 @@
 
 class Socket {
 private:
-    sockaddr_in serveraddress;
-public:
+    sockaddr_in serveraddress{};
     int serversocket;
     int clientsocket;
+
+    Socket();
+public:
+    static Socket& getInstance();
     void init(int maximumconn);
     void recivemsg(std::function<void(std::string)> callback);
+    bool sendmsg(std::string msg);
     void end() const;
+
+    Socket(Socket const&) = delete;
+    void operator=(Socket const&) = delete;
 };
 
 
