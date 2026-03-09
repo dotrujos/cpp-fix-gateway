@@ -8,14 +8,18 @@
 
 void process_message(std::string buffer) {
     std::cout << "My Message is: " << buffer << std::endl;
+
+    Socket::getInstance().sendmsg("Recebi :)");
 }
 
 int main() {
-    auto socket = Socket();
+    Socket::getInstance().init(5);
 
-    socket.init(5);
-    socket.recivemsg(process_message);
-    socket.end();
+    while (true) {
+        Socket::getInstance().recivemsg(process_message);
+    }
+
+    Socket::getInstance().end();
 
     return 0;
 }
