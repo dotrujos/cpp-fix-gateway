@@ -7,5 +7,12 @@ add_executable(app main.cpp
         src/socket/Socket.cpp
         src/socket/Socket.h)
 
-#add_executable(unit_tests)
-#target_link_libraries(unit_tests PRIVATE GTest::gtest_main)
+include(CTest)
+enable_testing()
+
+add_executable(unit_tests
+        tests/socket/Socket_Test.cpp
+        src/socket/Socket.cpp
+        src/socket/Socket.h)
+target_link_libraries(unit_tests PRIVATE GTest::gtest_main)
+add_test(NAME unit_tests COMMAND unit_tests)
