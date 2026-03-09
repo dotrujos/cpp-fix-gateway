@@ -3,6 +3,8 @@
 //
 
 #include "Socket.h"
+
+#include <iostream>
 #include <unistd.h>
 
 void Socket::init(int maximumconn) {
@@ -14,6 +16,19 @@ void Socket::init(int maximumconn) {
 
     bind(serversocket, reinterpret_cast<struct sockaddr *>(&serveraddress), sizeof(serveraddress));
     listen(serversocket, maximumconn);
+
+    std::cout << "Server started at: " << serveraddress.sin_port << std::endl;
+
+    clientsocket = accept(serversocket, nullptr, nullptr);
+}
+
+void Socket::recivemsg(std::function<void(std::string)> callback) {
+    char buffer[1024] = {0};
+    recv(clientsocket, buffer, sizeof(buffer), 0);
+
+    std::cout << "Recived message: " << buffer << std::endl;
+
+    callback(buffer);
 }
 
 void Socket::end() const {

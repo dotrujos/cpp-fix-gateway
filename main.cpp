@@ -6,17 +6,15 @@
 
 #include "src/socket/Socket.h"
 
-int main(void) {
+void process_message(std::string buffer) {
+    std::cout << "My Message is: " << buffer << std::endl;
+}
+
+int main() {
     auto socket = Socket();
 
     socket.init(5);
-
-    const int clientSocket = accept(socket.serversocket, nullptr, nullptr);
-    char buffer[1024] = {0};
-    recv(clientSocket, buffer, sizeof(buffer), 0);
-
-    std::cout << buffer << std::endl;
-
+    socket.recivemsg(process_message);
     socket.end();
 
     return 0;
