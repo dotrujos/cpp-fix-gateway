@@ -7,14 +7,13 @@
 #include <future>
 
 TEST(SocketIntegrationTest, ReciveMsgSuccessfully) {
-    Socket server;
     std::string received_msg;
     std::promise<void> message_received_promise;
     auto message_received_future = message_received_promise.get_future();
 
-    std::thread server_thread([&server, &received_msg, &message_received_promise]() {
-        server.init(5);
-        server.recivemsg([&received_msg, &message_received_promise](std::string msg) {
+    std::thread server_thread([&received_msg, &message_received_promise]() {
+        Socket::getInstance().init(5);
+        Socket::getInstance().recivemsg([&received_msg, &message_received_promise](std::string msg) {
             received_msg = msg;
             message_received_promise.set_value();
         });
@@ -31,7 +30,7 @@ TEST(SocketIntegrationTest, ReciveMsgSuccessfully) {
     inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr);
 
     int connect_res = connect(client_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
-    ASSERT_EQ(connect_res, 0) << "Failed to connect to the server";
+    ASSERT_EQ(connect_res, 0) << "Failed to connect to the Socket::getInstance()";
 
     std::string test_message = "Hello from client!";
     send(client_fd, test_message.c_str(), test_message.length(), 0);
@@ -43,7 +42,7 @@ TEST(SocketIntegrationTest, ReciveMsgSuccessfully) {
     }
 
     close(client_fd);
-    server.end();
+    Socket::getInstance().end();
     if (server_thread.joinable()) {
         server_thread.join();
     }
