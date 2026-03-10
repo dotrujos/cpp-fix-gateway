@@ -10,8 +10,6 @@
 #define CFIXGATEWAY_FIXDECODER_H
 
 class FixDecoder {
-private:
-    std::vector<std::string> split_string(const std::string& str, char delimiter);
 public:
     FixMessage decode(std::string message);
 };

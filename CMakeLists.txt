@@ -13,6 +13,7 @@ add_executable(app main.cpp
         src/models/FixMessage.h
         src/environment/Environment.cpp
         src/environment/Environment.h
+        src/utils/StringUtils.h
 )
 
 include(CTest)
@@ -26,6 +27,7 @@ add_executable(unit_tests
         src/decoders/FixDecoder.cpp
         src/decoders/FixDecoder.h
         src/environment/Environment.cpp
-        src/environment/Environment.h)
+        src/environment/Environment.h
+        src/utils/StringUtils.h)
 target_link_libraries(unit_tests PRIVATE GTest::gtest_main)
 add_test(NAME unit_tests COMMAND unit_tests)

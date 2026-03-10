@@ -4,21 +4,10 @@
 
 #include "FixDecoder.h"
 #include "../models/FixTags.h"
+#include "../utils/StringUtils.h"
 
 #include <iostream>
 #include <sstream>
-
-std::vector<std::string> FixDecoder::split_string(const std::string &str, char delimiter) {
-    std::vector<std::string> tokens;
-    std::stringstream ss(str);
-    std::string token;
-
-    while (std::getline(ss, token, delimiter)) {
-        tokens.push_back(token);
-    }
-
-    return tokens;
-}
 
 FixMessage FixDecoder::decode(std::string message) {
     std::vector<std::string> messages = split_string(message, '|');
