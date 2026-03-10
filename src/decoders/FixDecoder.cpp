@@ -3,6 +3,7 @@
 //
 
 #include "FixDecoder.h"
+#include "../models/FixTags.h"
 
 #include <iostream>
 #include <sstream>
@@ -39,19 +40,21 @@ FixMessage FixDecoder::decode(std::string message) {
                 return fix_message;
             }
 
-            if (tag == "8") fix_message.begin_string = value;
-            if (tag == "9") fix_message.body_length = std::stoi(value);
-            if (tag == "35") fix_message.message_type = value;
-            if (tag == "34") fix_message.message_sequence_num = std::stoi(value);
-            if (tag == "49") fix_message.sender_id = value;
-            if (tag == "56") fix_message.target_id = value;
-            if (tag == "11") fix_message.ci_order_id = value;
-            if (tag == "54") fix_message.side = std::stoi(value);
-            if (tag == "55") fix_message.symbol = value;
-            if (tag == "44") fix_message.price = std::stod(value);
-            if (tag == "59") fix_message.time_in_force = std::stoi(value);
-            if (tag == "10") fix_message.check_sum = value;
-            if (tag == "38") fix_message.order_quantity = std::stoi(value);
+            int itag = std::stoi(tag);
+
+            if (itag == FixTags::BEGIN_STRING) fix_message.begin_string = value;
+            if (itag == FixTags::BODY_LENGTH) fix_message.body_length = std::stoi(value);
+            if (itag == FixTags::MESSAGE_TYPE) fix_message.message_type = value;
+            if (itag == FixTags::MESSAGE_SEQUENCE_NUM) fix_message.message_sequence_num = std::stoi(value);
+            if (itag == FixTags::SENDER_ID) fix_message.sender_id = value;
+            if (itag == FixTags::TARGET_ID) fix_message.target_id = value;
+            if (itag == FixTags::CI_ORDER_ID) fix_message.ci_order_id = value;
+            if (itag == FixTags::SIDE) fix_message.side = std::stoi(value);
+            if (itag == FixTags::SYMBOL) fix_message.symbol = value;
+            if (itag == FixTags::PRICE) fix_message.price = std::stod(value);
+            if (itag == FixTags::TIME_IN_FORCE) fix_message.time_in_force = std::stoi(value);
+            if (itag == FixTags::CHECK_SUM) fix_message.check_sum = value;
+            if (itag == FixTags::ORDER_QUANTITY) fix_message.order_quantity = std::stoi(value);
         }
     } catch (const std::invalid_argument& e) {
         std::cerr << "Invalid argument: " << e.what() << std::endl;
