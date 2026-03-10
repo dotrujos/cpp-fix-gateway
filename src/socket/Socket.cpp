@@ -3,6 +3,7 @@
 //
 
 #include "Socket.h"
+#include "../environment/Environment.h"
 
 #include <cstring>
 #include <iostream>
@@ -37,17 +38,23 @@ bool Socket::sendmsg(std::string msg) {
     return true;
 }
 
-void Socket::init(int maximumconn) {
+void Socket::init() {
+    std::string port = Environment::getInstance().get("PORT");
+    std::string maximum_conn = Environment::getInstance().get("MAXIMUM_CONNECTIONS");
+
+    if (port.empty()) port = "8080";
+    if (maximum_conn.empty()) maximum_conn = "5";
+
     serversocket = socket(AF_INET, SOCK_STREAM, 0);
 
     serveraddress.sin_family = AF_INET;
-    serveraddress.sin_port = htons(8080);
+    serveraddress.sin_port = htons(std::stoi(port));
     serveraddress.sin_addr.s_addr = INADDR_ANY;
 
     bind(serversocket, reinterpret_cast<struct sockaddr *>(&serveraddress), sizeof(serveraddress));
-    listen(serversocket, maximumconn);
+    listen(serversocket, std::stoi(maximum_conn));
 
-    std::cout << "Server started at: " << serveraddress.sin_port << std::endl;
+    std::cout << "Server started at: " << port << std::endl;
 
     clientsocket = accept(serversocket, nullptr, nullptr);
 }

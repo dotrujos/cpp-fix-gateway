@@ -24,6 +24,8 @@ add_executable(unit_tests
         src/socket/Socket.h
         tests/decoders/FixDecoder_Test.cpp
         src/decoders/FixDecoder.cpp
-        src/decoders/FixDecoder.h)
+        src/decoders/FixDecoder.h
+        src/environment/Environment.cpp
+        src/environment/Environment.h)
 target_link_libraries(unit_tests PRIVATE GTest::gtest_main)
 add_test(NAME unit_tests COMMAND unit_tests)

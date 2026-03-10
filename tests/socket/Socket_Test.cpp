@@ -12,7 +12,7 @@ TEST(SocketIntegrationTest, ReciveMsgSuccessfully) {
     auto message_received_future = message_received_promise.get_future();
 
     std::thread server_thread([&received_msg, &message_received_promise]() {
-        Socket::getInstance().init(5);
+        Socket::getInstance().init();
         Socket::getInstance().recivemsg([&received_msg, &message_received_promise](std::string msg) {
             received_msg = msg;
             message_received_promise.set_value();

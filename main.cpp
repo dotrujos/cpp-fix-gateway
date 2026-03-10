@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
        Environment::getInstance().parseEnv(".env"); 
     }
 
-    Socket::getInstance().init(5);
+    Socket::getInstance().init();
 
     while (true) {
         Socket::getInstance().recivemsg(process_message);
