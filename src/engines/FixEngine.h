@@ -4,12 +4,15 @@
 
 #ifndef CFIXGATEWAY_FIXENGINE_H
 #define CFIXGATEWAY_FIXENGINE_H
-#include <string>
 
+#include <string>
+#include "../decoders/FixDecoder.h"
 
 class FixEngine {
+private:
+    FixDecoder fix_decoder = FixDecoder();
 public:
-    void run(std::string fix);
+    void run(const std::string &fix);
 };
 
 
