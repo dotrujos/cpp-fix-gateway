@@ -15,7 +15,7 @@ void process_message(std::string buffer) {
 
 int main(int argc, char* argv[]) {
     std::cout << "Starting FIX Gateway..." << std::endl;
-    std::cout << "Repository: https://github.com/dotrujos/cpp-fix-gateway" << std::endl;
+    std::cout << "Repository: https://github.com/dotrujos/fix-gateway" << std::endl;
 
     const std::vector<std::string_view> args(argv, argv + argc);
     std::string env_path;
