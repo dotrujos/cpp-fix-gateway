@@ -11,6 +11,8 @@ add_executable(app main.cpp
         src/decoders/FixDecoder.cpp
         src/decoders/FixDecoder.h
         src/models/FixMessage.h
+        src/environment/Environment.cpp
+        src/environment/Environment.h
 )
 
 include(CTest)
