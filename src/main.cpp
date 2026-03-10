@@ -4,8 +4,8 @@
 
 #include <iostream>
 
-#include "src/socket/Socket.h"
-#include "src/environment/Environment.h"
+#include "socket/Socket.h"
+#include "environment/Environment.h"
 
 void process_message(std::string buffer) {
     std::cout << "My Message is: " << buffer << std::endl;

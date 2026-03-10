@@ -3,7 +3,7 @@ project(CFixGateway CXX)
 
 find_package(GTest CONFIG REQUIRED)
 
-add_executable(app main.cpp
+add_executable(app src/main.cpp
         src/socket/Socket.cpp
         src/socket/Socket.h
         src/engines/FixEngine.cpp
