@@ -152,3 +152,9 @@ vcpkg_installed/
 # Environment
 .env*
 !.env.example
+
+# Scripts
+scripts/*
+!scripts/*.cpp
+!scripts/*.c
+!scripts/*.h
