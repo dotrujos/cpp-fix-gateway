@@ -14,6 +14,8 @@ add_executable(app src/main.cpp
         src/environment/Environment.cpp
         src/environment/Environment.h
         src/utils/StringUtils.h
+        src/interactions/ServiceLogonInteraction.cpp
+        src/interactions/ServiceLogonInteraction.h
 )
 
 include(CTest)

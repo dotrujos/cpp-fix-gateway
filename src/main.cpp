@@ -4,8 +4,10 @@
 
 #include <iostream>
 
+#include "engines/FixEngine.h"
 #include "socket/Socket.h"
 #include "environment/Environment.h"
+#include "interactions/ServiceLogonInteraction.h"
 
 void process_message(std::string buffer) {
     std::cout << "My Message is: " << buffer << std::endl;
@@ -28,14 +30,24 @@ int main(int argc, char* argv[]) {
 
     if (!env_path.empty()) {
         Environment::getInstance().parseEnv(env_path);
-    } else {
-       Environment::getInstance().parseEnv(".env"); 
     }
 
     Socket::getInstance().init();
+    auto fix_engine = FixEngine();
 
     while (true) {
-        Socket::getInstance().recivemsg(process_message);
+        if (Socket::getInstance().wait()) {
+
+            bool isConnected = true;
+
+            while (isConnected) {
+                isConnected = Socket::getInstance().recivemsg([&](std::string msg) {
+                    fix_engine.run(msg);
+                });
+            }
+
+            std::cout << "Connection closed. Returning to wait mode." << std::endl;
+        }
     }
 
     Socket::getInstance().end();

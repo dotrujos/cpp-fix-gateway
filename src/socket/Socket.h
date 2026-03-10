@@ -19,8 +19,9 @@ private:
 public:
     static Socket& getInstance();
     void init();
-    void recivemsg(std::function<void(std::string)> callback);
+    bool recivemsg(std::function<void(std::string)> callback);
     bool sendmsg(std::string msg);
+    bool wait();
     void end() const;
 
     Socket(Socket const&) = delete;

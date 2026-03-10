@@ -18,6 +18,31 @@ Socket::Socket() : serversocket(-1), clientsocket(-1) {
     memset(&serveraddress, 0, sizeof(serveraddress));
 }
 
+void Socket::init() {
+    std::string port = Environment::getInstance().get("PORT");
+    std::string maximum_conn = Environment::getInstance().get("MAXIMUM_CONNECTIONS");
+
+    if (port.empty()) port = "8080";
+    if (maximum_conn.empty()) maximum_conn = "5";
+
+    serversocket = socket(AF_INET, SOCK_STREAM, 0);
+
+    int opt = 1;
+    setsockopt(serversocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    serveraddress.sin_family = AF_INET;
+    serveraddress.sin_port = htons(std::stoi(port));
+    serveraddress.sin_addr.s_addr = INADDR_ANY;
+
+    if (bind(serversocket, reinterpret_cast<struct sockaddr *>(&serveraddress), sizeof(serveraddress)) < 0) {
+        perror("Bind failed");
+        return;
+    }
+
+    listen(serversocket, std::stoi(maximum_conn));
+    std::cout << "Server listening on port: " << port << std::endl;
+}
+
 bool Socket::sendmsg(std::string msg) {
     if (clientsocket == -1) {
         std::cerr << "No client found to send messsage" << std::endl;
@@ -38,34 +63,33 @@ bool Socket::sendmsg(std::string msg) {
     return true;
 }
 
-void Socket::init() {
-    std::string port = Environment::getInstance().get("PORT");
-    std::string maximum_conn = Environment::getInstance().get("MAXIMUM_CONNECTIONS");
-
-    if (port.empty()) port = "8080";
-    if (maximum_conn.empty()) maximum_conn = "5";
-
-    serversocket = socket(AF_INET, SOCK_STREAM, 0);
-
-    serveraddress.sin_family = AF_INET;
-    serveraddress.sin_port = htons(std::stoi(port));
-    serveraddress.sin_addr.s_addr = INADDR_ANY;
-
-    bind(serversocket, reinterpret_cast<struct sockaddr *>(&serveraddress), sizeof(serveraddress));
-    listen(serversocket, std::stoi(maximum_conn));
-
-    std::cout << "Server started at: " << port << std::endl;
+bool Socket::wait() {
+    std::cout << "Waiting for a new connection..." << std::endl;
 
     clientsocket = accept(serversocket, nullptr, nullptr);
+
+    if (clientsocket < 0) {
+        perror("Accept failed");
+        return false;
+    }
+
+    std::cout << "New client connected!" << std::endl;
+    return true;
 }
 
-void Socket::recivemsg(std::function<void(std::string)> callback) {
+bool Socket::recivemsg(std::function<void(std::string)> callback) {
     char buffer[1024] = {0};
-    recv(clientsocket, buffer, sizeof(buffer), 0);
 
-    std::cout << "Recived message: " << buffer << std::endl;
+    ssize_t bytesRead = recv(clientsocket, buffer, sizeof(buffer), 0);
 
-    callback(buffer);
+    if (bytesRead <= 0) {
+        close(clientsocket);
+        clientsocket = -1;
+        return false;
+    }
+
+    callback(std::string(buffer, bytesRead));
+    return true;
 }
 
 void Socket::end() const {
